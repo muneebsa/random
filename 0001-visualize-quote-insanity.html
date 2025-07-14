@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Definition of Insanity</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            text-align: center;
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .quote {
+            color: #fff;
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            font-weight: 300;
+            line-height: 1.4;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        
+        .scene {
+            position: relative;
+            height: 400px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+            margin: 2rem auto;
+        }
+        
+        .person {
+            position: absolute;
+            left: 50px;
+            bottom: 80px;
+            width: 80px;
+            height: 120px;
+            transition: all 0.8s ease;
+        }
+        
+        .head {
+            width: 30px;
+            height: 30px;
+            background: #ffdbac;
+            border-radius: 50%;
+            margin: 0 auto 5px;
+            position: relative;
+        }
+        
+        .face {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+        }
+        
+        .body {
+            width: 40px;
+            height: 60px;
+            background: #4a90e2;
+            margin: 0 auto;
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .legs {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 5px;
+        }
+        
+        .leg {
+            width: 12px;
+            height: 25px;
+            background: #2c5aa0;
+            border-radius: 6px;
+        }
+        
+        .wall {
+            position: absolute;
+            right: 50px;
+            bottom: 0;
+            width: 20px;
+            height: 300px;
+            background: linear-gradient(to bottom, #8b4513, #a0522d);
+            border-radius: 10px 10px 0 0;
+            box-shadow: inset -5px 0 10px rgba(0,0,0,0.3);
+        }
+        
+        .cracks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .crack {
+            position: absolute;
+            background: #654321;
+            border-radius: 1px;
+        }
+        
+        .crack1 { width: 2px; height: 30px; top: 50px; left: 8px; transform: rotate(15deg); }
+        .crack2 { width: 1px; height: 20px; top: 80px; left: 12px; transform: rotate(-10deg); }
+        .crack3 { width: 2px; height: 25px; top: 120px; left: 6px; transform: rotate(25deg); }
+        
+        .button {
+            position: absolute;
+            bottom: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+        }
+        
+        .button:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 7px 20px rgba(255,107,107,0.6);
+        }
+        
+        .button:active {
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .counter {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            font-size: 18px;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 15px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .result {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff6b6b;
+            font-size: 24px;
+            font-weight: bold;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            opacity: 0;
+        }
+        
+        .frustration-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #fff;
+            font-size: 14px;
+            background: rgba(0,0,0,0.3);
+            padding: 8px 12px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        @keyframes particle-burst {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--x), var(--y)) scale(0.5);
+            }
+        }
+        
+        @keyframes run-to-wall {
+            0% {
+                left: 50px;
+                transform: scaleX(1);
+            }
+            45% {
+                left: 590px;
+                transform: scaleX(1);
+            }
+            50% {
+                left: 590px;
+                transform: scaleX(1);
+            }
+            55% {
+                left: 570px;
+                transform: scaleX(-1);
+            }
+            100% {
+                left: 50px;
+                transform: scaleX(1);
+            }
+        }
+        
+        @keyframes running-legs {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(20deg); }
+            75% { transform: rotate(-20deg); }
+        }
+        
+        @keyframes bounce-back {
+            0% { transform: translateX(0) scaleX(1); }
+            50% { transform: translateX(-30px) scaleX(-1); }
+            100% { transform: translateX(0) scaleX(1); }
+        }
+        
+        .instructions {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            margin-top: 2rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="quote">
+            "Insanity is doing the same thing over and over again<br>and expecting different results"
+        </div>
+        
+        <div class="scene">
+            <div class="counter">Attempts: <span id="attempts">0</span></div>
+            <div class="frustration-indicator" id="frustration">Calm 😌</div>
+            
+            <div class="person" id="person">
+                <div class="head">
+                    <div class="face" id="face">🙂</div>
+                </div>
+                <div class="body">
+                </div>
+                <div class="legs">
+                    <div class="leg"></div>
+                    <div class="leg"></div>
+                </div>
+            </div>
+            
+            <div class="wall" id="wall">
+                <div class="cracks" id="cracks">
+                    <div class="crack crack1"></div>
+                    <div class="crack crack2"></div>
+                    <div class="crack crack3"></div>
+                </div>
+            </div>
+            
+            <div class="result" id="result">STILL A WALL</div>
+            <div class="particles" id="particles"></div>
+        </div>
+        
+        <button class="button" id="actionBtn">Try Again!</button>
+        
+        <div class="instructions">
+            Click the button to watch the definition of insanity unfold...
+        </div>
+    </div>
+
+    <script>
+        let attempts = 0;
+        const faces = ['🙂', '😐', '😕', '😠', '😡', '🤯', '😵'];
+        const frustrationLevels = [
+            'Calm 😌',
+            'Hopeful 🤔',
+            'Confused 😕',
+            'Annoyed 😤',
+            'Frustrated 😡',
+            'Furious 🤬',
+            'Insane 🤯'
+        ];
+        
+        const actionBtn = document.getElementById('actionBtn');
+        const attemptsSpan = document.getElementById('attempts');
+        const person = document.getElementById('person');
+        const wall = document.getElementById('wall');
+        const face = document.getElementById('face');
+        const result = document.getElementById('result');
+        const frustration = document.getElementById('frustration');
+        const cracks = document.getElementById('cracks');
+        const particles = document.getElementById('particles');
+        
+        function createParticles() {
+            for (let i = 0; i < 8; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = '130px';
+                particle.style.top = '150px';
+                particle.style.setProperty('--x', `${(Math.random() - 0.5) * 100}px`);
+                particle.style.setProperty('--y', `${(Math.random() - 0.5) * 100}px`);
+                particle.style.animation = 'particle-burst 0.6s ease-out forwards';
+                particles.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, 600);
+            }
+        }
+        
+        actionBtn.addEventListener('click', () => {
+            // Disable button during animation
+            actionBtn.disabled = true;
+            actionBtn.style.opacity = '0.6';
+            
+            attempts++;
+            attemptsSpan.textContent = attempts;
+            
+            // Update face based on attempts
+            const faceIndex = Math.min(attempts - 1, faces.length - 1);
+            face.textContent = faces[faceIndex];
+            
+            // Update frustration level
+            const frustrationIndex = Math.min(attempts - 1, frustrationLevels.length - 1);
+            frustration.textContent = frustrationLevels[frustrationIndex];
+            
+            // Animate person running to wall
+            person.style.animation = 'run-to-wall 2.5s ease-in-out';
+            
+            // Animate legs while running (first part only)
+            const legs = document.querySelectorAll('.leg');
+            legs.forEach(leg => {
+                leg.style.animation = 'running-legs 0.2s infinite';
+            });
+            
+            // Stop leg animation at impact
+            setTimeout(() => {
+                legs.forEach(leg => {
+                    leg.style.animation = '';
+                });
+                wall.classList.add('shake');
+                createParticles();
+                
+                // Show result
+                result.style.opacity = '1';
+                result.style.transform = 'translate(-50%, -50%) scale(1.2)';
+            }, 1250); // At the moment of impact
+            
+            // Show cracks slightly after multiple attempts
+            if (attempts > 3) {
+                cracks.style.opacity = Math.min((attempts - 3) * 0.2, 0.6);
+            }
+            
+            // Change button text based on attempts
+            if (attempts === 1) {
+                actionBtn.textContent = "That didn't work...";
+            } else if (attempts === 2) {
+                actionBtn.textContent = "Maybe this time?";
+            } else if (attempts === 3) {
+                actionBtn.textContent = "Third time's the charm?";
+            } else if (attempts === 5) {
+                actionBtn.textContent = "This is insane!";
+            } else if (attempts > 5) {
+                actionBtn.textContent = "Keep trying anyway...";
+            }
+            
+            // Reset animations and re-enable button
+            setTimeout(() => {
+                person.style.animation = '';
+                wall.classList.remove('shake');
+                result.style.opacity = '0';
+                result.style.transform = 'translate(-50%, -50%) scale(1)';
+                actionBtn.disabled = false;
+                actionBtn.style.opacity = '1';
+            }, 2500);
+            
+            // Add extra effects for higher attempts
+            if (attempts > 8) {
+                person.style.filter = 'hue-rotate(30deg)';
+                document.body.style.animation = 'shake 0.3s ease-in-out';
+                setTimeout(() => {
+                    document.body.style.animation = '';
+                }, 300);
+            }
+        });
+        
+        // Reset function
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'r' || e.key === 'R') {
+                attempts = 0;
+                attemptsSpan.textContent = '0';
+                face.textContent = '🙂';
+                frustration.textContent = 'Calm 😌';
+                actionBtn.textContent = 'Try Again!';
+                actionBtn.disabled = false;
+                actionBtn.style.opacity = '1';
+                cracks.style.opacity = '0';
+                person.style.filter = '';
+                person.style.animation = '';
+                
+                // Reset leg animations
+                const legs = document.querySelectorAll('.leg');
+                legs.forEach(leg => {
+                    leg.style.animation = '';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

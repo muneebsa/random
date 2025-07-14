@@ -1,0 +1,30 @@
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS folder attributes
+._*
+
+# Static site build artifacts (if any)
+dist/
+build/
+
+# Node modules (if you ever use npm)
+node_modules/
+
+# Logs
+*.log
+
+# Backup files
+*.bak
+*.tmp
+*~
+
+# Ignore compiled files
+*.out
+
+# Ignore environment files
+.env
+
+# Ignore VS Code
