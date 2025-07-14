@@ -355,6 +355,53 @@
             }
         }
         
+        function animatePersonToWall() {
+            const scene = document.querySelector('.scene');
+            const personRect = person.getBoundingClientRect();
+            const wallRect = wall.getBoundingClientRect();
+            const sceneRect = scene.getBoundingClientRect();
+
+            // Calculate left position of person and wall relative to the scene
+            const personLeft = person.offsetLeft;
+            const wallLeft = wall.offsetLeft;
+
+            // Move person so its right edge touches wall's left edge
+            const targetX = wallLeft - personLeft - person.offsetWidth + 5; // 5px overlap for effect
+
+            person.style.transition = 'transform 1.2s cubic-bezier(.7,.2,.3,1)';
+            person.style.transform = `translateX(${targetX}px)`;
+
+            // Animate legs while running
+            const legs = document.querySelectorAll('.leg');
+            legs.forEach(leg => {
+                leg.style.animation = 'running-legs 0.2s infinite';
+            });
+
+            // Stop leg animation at impact
+            setTimeout(() => {
+                legs.forEach(leg => {
+                    leg.style.animation = '';
+                });
+                wall.classList.add('shake');
+                createParticles();
+
+                // Show result
+                result.style.opacity = '1';
+                result.style.transform = 'translate(-50%, -50%) scale(1.2)';
+            }, 1200);
+
+            // Reset animations and re-enable button
+            setTimeout(() => {
+                person.style.transition = '';
+                person.style.transform = '';
+                wall.classList.remove('shake');
+                result.style.opacity = '0';
+                result.style.transform = 'translate(-50%, -50%) scale(1)';
+                actionBtn.disabled = false;
+                actionBtn.style.opacity = '1';
+            }, 2500);
+        }
+
         actionBtn.addEventListener('click', () => {
             // Disable button during animation
             actionBtn.disabled = true;
@@ -371,27 +418,8 @@
             const frustrationIndex = Math.min(attempts - 1, frustrationLevels.length - 1);
             frustration.textContent = frustrationLevels[frustrationIndex];
             
-            // Animate person running to wall
-            person.style.animation = 'run-to-wall 2.5s ease-in-out';
-            
-            // Animate legs while running (first part only)
-            const legs = document.querySelectorAll('.leg');
-            legs.forEach(leg => {
-                leg.style.animation = 'running-legs 0.2s infinite';
-            });
-            
-            // Stop leg animation at impact
-            setTimeout(() => {
-                legs.forEach(leg => {
-                    leg.style.animation = '';
-                });
-                wall.classList.add('shake');
-                createParticles();
-                
-                // Show result
-                result.style.opacity = '1';
-                result.style.transform = 'translate(-50%, -50%) scale(1.2)';
-            }, 1250); // At the moment of impact
+            // Animate person running to wall (responsive)
+            animatePersonToWall();
             
             // Show cracks slightly after multiple attempts
             if (attempts > 3) {
@@ -410,16 +438,6 @@
             } else if (attempts > 5) {
                 actionBtn.textContent = "Keep trying anyway...";
             }
-            
-            // Reset animations and re-enable button
-            setTimeout(() => {
-                person.style.animation = '';
-                wall.classList.remove('shake');
-                result.style.opacity = '0';
-                result.style.transform = 'translate(-50%, -50%) scale(1)';
-                actionBtn.disabled = false;
-                actionBtn.style.opacity = '1';
-            }, 2500);
             
             // Add extra effects for higher attempts
             if (attempts > 8) {
