@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leadership Through Care</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .quote-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .quote {
+            color: #fff;
+            font-size: clamp(1rem, 4vw, 1.4rem);
+            font-weight: 300;
+            line-height: 1.4;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .author {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            font-style: italic;
+        }
+        
+        .animation-container {
+            position: relative;
+            height: 350px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .leadership-label {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            backdrop-filter: blur(5px);
+            transition: all 0.5s ease;
+        }
+        
+        .hierarchy-mode .leadership-label {
+            background: rgba(220, 53, 69, 0.8);
+        }
+        
+        .caring-mode .leadership-label {
+            background: rgba(40, 167, 69, 0.8);
+        }
+        
+        .scene {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: all 1s ease;
+        }
+        
+        .person {
+            position: absolute;
+            transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .leader {
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        
+        .leader-figure {
+            width: 60px;
+            height: 90px;
+            position: relative;
+        }
+        
+        .team-member {
+            bottom: 60px;
+            width: 45px;
+            height: 70px;
+        }
+        
+        .member1 { left: 12%; }
+        .member2 { left: 32%; }
+        .member3 { right: 32%; }
+        .member4 { right: 12%; }
+        
+        .head {
+            width: 24px;
+            height: 24px;
+            background: #ffdbac;
+            border-radius: 50%;
+            margin: 0 auto 4px;
+            position: relative;
+            border: 2px solid #ddd;
+        }
+        
+        .leader .head {
+            width: 30px;
+            height: 30px;
+            background: #ffd700;
+            border: 3px solid #fff;
+        }
+        
+        .crown {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            transition: all 1s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+        
+        .body {
+            width: 28px;
+            height: 45px;
+            background: #4a90e2;
+            margin: 0 auto;
+            border-radius: 10px;
+            position: relative;
+            border: 2px solid #fff;
+        }
+        
+        .leader .body {
+            background: #2c5aa0;
+            width: 35px;
+            height: 50px;
+        }
+        
+        .legs {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 4px;
+        }
+        
+        .leg {
+            width: 10px;
+            height: 18px;
+            background: #2c5aa0;
+            border-radius: 5px;
+            border: 1px solid #fff;
+        }
+        
+        .authority-symbol {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(220, 53, 69, 0.9);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            opacity: 1;
+            transition: all 1s ease;
+        }
+        
+        .support-platform {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 20px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border-radius: 10px;
+            opacity: 0;
+            transition: all 1.2s ease;
+            border: 2px solid #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .platform-label {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 11px;
+            font-weight: bold;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 8px;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+        
+        .growth-indicator {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            opacity: 0;
+            transition: all 1.5s ease;
+        }
+        
+        .team-success-label {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(40, 167, 69, 0.9);
+            color: #fff;
+            padding: 3px 6px;
+            border-radius: 8px;
+            font-size: 9px;
+            font-weight: bold;
+            opacity: 0;
+            transition: all 1.5s ease;
+            white-space: nowrap;
+        }
+        
+        .button {
+            width: 100%;
+            max-width: 320px;
+            height: 55px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(255,107,107,0.6);
+        }
+        
+        .button:active {
+            transform: translateY(0);
+        }
+        
+        .explanation {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            line-height: 1.5;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.5s ease;
+        }
+        
+        .key-points {
+            margin-top: 1rem;
+            text-align: left;
+        }
+        
+        .key-point {
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .point-icon {
+            font-size: 14px;
+            min-width: 20px;
+        }
+        
+        /* Animation States */
+        .hierarchy-mode .crown {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+        
+        .hierarchy-mode .authority-symbol {
+            opacity: 1;
+        }
+        
+        .hierarchy-mode .support-platform {
+            opacity: 0;
+            transform: translateX(-50%) translateY(20px);
+        }
+        
+        .hierarchy-mode .growth-indicator {
+            opacity: 0;
+        }
+        
+        .hierarchy-mode .team-success-label {
+            opacity: 0;
+        }
+        
+        .caring-mode .crown {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-30px) scale(0.5);
+        }
+        
+        .caring-mode .authority-symbol {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-10px);
+        }
+        
+        .caring-mode .leader {
+            bottom: 65px;
+        }
+        
+        .caring-mode .team-member {
+            bottom: 90px;
+        }
+        
+        .caring-mode .support-platform {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .caring-mode .growth-indicator {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-5px);
+        }
+        
+        .caring-mode .team-success-label {
+            opacity: 1;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translateX(-50%) translateY(-5px) scale(1); }
+            50% { transform: translateX(-50%) translateY(-5px) scale(1.2); }
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+            50% { box-shadow: 0 4px 20px rgba(255, 215, 0, 0.6); }
+        }
+        
+        .pulse .growth-indicator {
+            animation: pulse 2s infinite;
+        }
+        
+        .caring-mode .support-platform {
+            animation: glow 3s infinite;
+        }
+        
+        @media (max-width: 480px) {
+            .animation-container {
+                height: 300px;
+            }
+            
+            .leader-figure {
+                width: 50px;
+                height: 75px;
+            }
+            
+            .team-member {
+                width: 38px;
+                height: 60px;
+            }
+            
+            .head {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .leader .head {
+                width: 25px;
+                height: 25px;
+            }
+            
+            .body {
+                width: 22px;
+                height: 35px;
+            }
+            
+            .leader .body {
+                width: 28px;
+                height: 40px;
+            }
+            
+            .support-platform {
+                width: 160px;
+                height: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="quote-section">
+            <div class="quote">
+                "Leadership is not about being in charge.<br>
+                It's about taking care of those in your charge."
+            </div>
+            <div class="author">- John C. Maxwell</div>
+        </div>
+        
+        <div class="animation-container">
+            <div class="leadership-label" id="leadershipLabel">❌ Authority-Based Leadership</div>
+            <div class="scene hierarchy-mode" id="scene">
+                <div class="person leader">
+                    <div class="leader-figure">
+                        <div class="crown">👑</div>
+                        <div class="authority-symbol">BOSS</div>
+                        <div class="head"></div>
+                        <div class="body"></div>
+                        <div class="legs">
+                            <div class="leg"></div>
+                            <div class="leg"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="person team-member member1">
+                    <div class="head"></div>
+                    <div class="body"></div>
+                    <div class="legs">
+                        <div class="leg"></div>
+                        <div class="leg"></div>
+                    </div>
+                    <div class="growth-indicator">📈</div>
+                    <div class="team-success-label">GROWING</div>
+                </div>
+                
+                <div class="person team-member member2">
+                    <div class="head"></div>
+                    <div class="body"></div>
+                    <div class="legs">
+                        <div class="leg"></div>
+                        <div class="leg"></div>
+                    </div>
+                    <div class="growth-indicator">🌟</div>
+                    <div class="team-success-label">THRIVING</div>
+                </div>
+                
+                <div class="person team-member member3">
+                    <div class="head"></div>
+                    <div class="body"></div>
+                    <div class="legs">
+                        <div class="leg"></div>
+                        <div class="leg"></div>
+                    </div>
+                    <div class="growth-indicator">💡</div>
+                    <div class="team-success-label">INNOVATIVE</div>
+                </div>
+                
+                <div class="person team-member member4">
+                    <div class="head"></div>
+                    <div class="body"></div>
+                    <div class="legs">
+                        <div class="leg"></div>
+                        <div class="leg"></div>
+                    </div>
+                    <div class="growth-indicator">🚀</div>
+                    <div class="team-success-label">SUCCESSFUL</div>
+                </div>
+                
+                <div class="support-platform">
+                    <div class="platform-label">LEADER AS FOUNDATION</div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="button" id="transformBtn">
+            🔄 Transform to Caring Leadership
+        </button>
+        
+        <div class="explanation" id="explanation">
+            <div><strong>Traditional Hierarchy:</strong> Leader stands above with authority symbols, maintaining control through position and power.</div>
+            <div class="key-points" id="keyPoints">
+                <div class="key-point">
+                    <span class="point-icon">👑</span>
+                    <span>Power through position</span>
+                </div>
+                <div class="key-point">
+                    <span class="point-icon">📊</span>
+                    <span>Top-down control</span>
+                </div>
+                <div class="key-point">
+                    <span class="point-icon">❌</span>
+                    <span>Limited team growth</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isCaringMode = false;
+        const scene = document.getElementById('scene');
+        const transformBtn = document.getElementById('transformBtn');
+        const leadershipLabel = document.getElementById('leadershipLabel');
+        const explanation = document.getElementById('explanation');
+        const keyPoints = document.getElementById('keyPoints');
+        
+        const content = {
+            hierarchy: {
+                label: "❌ Authority-Based Leadership",
+                button: "🔄 Transform to Caring Leadership",
+                explanation: "<strong>Traditional Hierarchy:</strong> Leader stands above with authority symbols, maintaining control through position and power.",
+                points: [
+                    { icon: "👑", text: "Power through position" },
+                    { icon: "📊", text: "Top-down control" },
+                    { icon: "❌", text: "Limited team growth" }
+                ]
+            },
+            caring: {
+                label: "✅ Caring Leadership",
+                button: "↩️ Return to Hierarchy View",
+                explanation: "<strong>Caring Leadership:</strong> Leader becomes the foundation that elevates and supports the team's growth and success.",
+                points: [
+                    { icon: "🤝", text: "Support from below" },
+                    { icon: "📈", text: "Team elevation" },
+                    { icon: "🌟", text: "Shared success" }
+                ]
+            }
+        };
+        
+        function updateContent(mode) {
+            const current = content[mode];
+            leadershipLabel.textContent = current.label;
+            transformBtn.innerHTML = current.button;
+            explanation.innerHTML = current.explanation;
+            
+            keyPoints.innerHTML = current.points.map(point => 
+                `<div class="key-point">
+                    <span class="point-icon">${point.icon}</span>
+                    <span>${point.text}</span>
+                </div>`
+            ).join('');
+        }
+        
+        transformBtn.addEventListener('click', () => {
+            if (!isCaringMode) {
+                // Transform to caring leadership
+                scene.classList.remove('hierarchy-mode');
+                scene.classList.add('caring-mode');
+                updateContent('caring');
+                
+                // Add pulse effect after transformation
+                setTimeout(() => {
+                    scene.classList.add('pulse');
+                }, 1500);
+                
+                isCaringMode = true;
+            } else {
+                // Return to hierarchy
+                scene.classList.remove('caring-mode', 'pulse');
+                scene.classList.add('hierarchy-mode');
+                updateContent('hierarchy');
+                
+                isCaringMode = false;
+            }
+        });
+        
+        // Auto-demo after 4 seconds
+        setTimeout(() => {
+            if (!isCaringMode) {
+                transformBtn.click();
+            }
+        }, 4000);
+        
+        // Touch-friendly interaction
+        transformBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            transformBtn.style.transform = 'translateY(0)';
+        });
+        
+        transformBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            setTimeout(() => {
+                transformBtn.style.transform = '';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
